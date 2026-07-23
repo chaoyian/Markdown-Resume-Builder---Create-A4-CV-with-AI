@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: cv
+theme: a4-resume
 size: A4
 paginate: false
 ---
