@@ -1,0 +1,14 @@
+node_modules/
+.npm-cache/
+tmp/
+.DS_Store
+
+# Local/private resume data
+resume.md
+*.private.md
+private/
+archive/
+
+# Generated artifacts may contain personal information
+output/
+*.pdf
