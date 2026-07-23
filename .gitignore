@@ -2,13 +2,15 @@ node_modules/
 .npm-cache/
 tmp/
 .DS_Store
+.npmrc
+生成简历.command
 
-# Local/private resume data
+# Private working files
 resume.md
 *.private.md
 private/
 archive/
 
-# Generated artifacts may contain personal information
+# Generated artifacts
 output/
 *.pdf

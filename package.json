@@ -1,8 +1,8 @@
 {
   "name": "marp-a4-resume-toolkit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "A privacy-conscious bilingual A4 resume toolkit built with Marp and refactored with AI assistance.",
+  "description": "A bilingual A4 resume toolkit built with Marp and refactored with AI assistance.",
   "license": "MIT",
   "keywords": [
     "marp",
@@ -15,15 +15,18 @@
     "node": ">=18"
   },
   "scripts": {
-    "prepare:output": "node -e \"require('fs').mkdirSync('output/pdf',{recursive:true})\"",
-    "build": "npm run prepare:output && marp resume.md --pdf --output output/pdf/resume.pdf",
-    "build:zh": "npm run prepare:output && marp examples/resume.zh-CN.md --pdf --output output/pdf/resume.zh-CN.pdf",
-    "build:en": "npm run prepare:output && marp examples/resume.en.md --pdf --output output/pdf/resume.en.pdf",
+    "init:zh": "node scripts/init-resume.mjs zh",
+    "init:en": "node scripts/init-resume.mjs en",
+    "build": "node scripts/export-pdf.mjs resume.md output/pdf/resume.pdf",
+    "build:zh": "node scripts/export-pdf.mjs examples/resume.zh-CN.md output/pdf/resume.zh-CN.pdf",
+    "build:en": "node scripts/export-pdf.mjs examples/resume.en.md output/pdf/resume.en.pdf",
     "build:examples": "npm run build:zh && npm run build:en",
+    "export": "node scripts/export-interactive.mjs",
     "preview": "marp resume.md --preview",
     "preview:zh": "marp examples/resume.zh-CN.md --preview",
     "preview:en": "marp examples/resume.en.md --preview",
-    "watch": "npm run prepare:output && marp resume.md --watch --output output/pdf/resume.pdf"
+    "check:structure": "node scripts/verify-project.mjs",
+    "check": "npm run check:structure && npm run build:examples"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "4.5.0"
@@ -32,7 +35,7 @@
     "allowLocalFiles": true,
     "html": true,
     "themeSet": [
-      ".marp/cv.css"
+      "themes/a4-resume.css"
     ]
   }
 }
