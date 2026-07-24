@@ -6,7 +6,7 @@
 
 [English](README.en.md) | 简体中文
 
-基于 Marp 的双语 A4 简历工具包。使用 Markdown 维护内容，通过固定版本的 Marp CLI 生成排版稳定的 PDF，不依赖 VS Code 导出。
+基于 Marp 的双语 A4 简历工具包。使用 Markdown 维护内容，通过固定版本的 Marp CLI 生成排版稳定的 PDF，这是一个基于Marp来构建简单CV的尝试，优势是AI可以很好的访问并使用，本项目已经提供了一个主题包，如案例图片所展示的，可通过修改主题包进行自定义、可通过编辑md文档来制作自己的简历，使用者可以克隆到本地，然后直接使用终端Agent进行访问使用修改。
 
 ![中文简历模板预览](docs/assets/resume.zh-CN.png)
 
