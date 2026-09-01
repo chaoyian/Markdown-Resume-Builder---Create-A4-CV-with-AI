@@ -1,23 +1,11 @@
 # Privacy design
 
-Resume repositories can accidentally expose contact details, employment history, unpublished projects, and generated PDFs. This project separates public templates from the local working copy.
+## Public and private content
 
-## Public files
-
-- `examples/resume.zh-CN.md`
-- `examples/resume.en.md`
-- `themes/`
-- `scripts/`
-- `docs/`
-- project configuration and license files
-
-The examples contain fictional organizations and placeholder contact details.
-
-## Local files
-
-The following paths are ignored by Git:
+The repository contains only public templates, themes, scripts, tests, documentation, and preview images. Personal content belongs in ignored local paths:
 
 ```text
+resumes/
 resume.md
 *.private.md
 private/
@@ -26,20 +14,20 @@ output/
 *.pdf
 ```
 
-`resume.md` is the default private working copy. Generated PDFs are written under `output/pdf/`.
+The root-level `resume.md` rule remains for backward compatibility. Version 2.0 uses `resumes/` as its private working library.
 
-## Check before publishing
+## Portable downloads
+
+A Release archive contains a generated `resumes/START-HERE.txt`, not a real resume. The user's first template copy is created locally after extraction. Nothing in the launcher has network upload behavior; network access is only used by GitHub Actions while building public release artifacts.
+
+Portable installations keep personal Markdown and PDFs beside the application for transparency. Back up `resumes/` and `output/` before deleting or replacing the extracted folder.
+
+## Publishing checklist
 
 ```bash
 git status --short
-git check-ignore -v resume.md archive output
+git check-ignore -v resumes/private.md private archive output
 git ls-files
 ```
 
-Confirm that `resume.md`, PDFs, archives, images containing personal details, and unrelated documents are absent from `git ls-files`.
-
-`.gitignore` is a staging safeguard, not encryption. Avoid `git add -f` for ignored files, and review the staged diff before every push.
-
-## Local file access
-
-Marp is configured with `allowLocalFiles` so a resume may use local images. Build only Markdown files that you trust.
+Confirm that `resumes/`, PDFs, backups, archive contents, screenshots with personal details, and unrelated documents are absent from `git ls-files`. `.gitignore` is a staging safeguard, not encryption; always inspect the staged diff and avoid `git add -f`.
