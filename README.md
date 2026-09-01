@@ -1,110 +1,97 @@
 # Marp A4 Resume Toolkit
 
-[![CI](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml)
+[![CI](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js 18+](https://img.shields.io/badge/Node.js-18%2B-339933.svg)](https://nodejs.org/)
+[![Release](https://img.shields.io/github/v/release/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases)
 
 [English](README.en.md) | 简体中文
 
-基于 Marp 的双语 A4 简历工具包。使用 Markdown 维护内容，通过固定版本的 Marp CLI 生成排版稳定的 PDF，这是一个基于Marp来构建简单CV的尝试，优势是AI可以很好的访问并使用，本项目已经提供了一个主题包，如案例图片所展示的，可通过修改主题包进行自定义、可通过编辑md文档来制作自己的简历，使用者可以克隆到本地，然后直接使用终端Agent进行访问使用修改。
+使用 Markdown 维护内容、通过 Marp 生成标准 A4 PDF 的双语简历工具包。v2.0 提供 Windows、macOS 和 Linux 便携包，多版本简历可以在同一个启动器中选择。
 
 ![中文简历模板预览](docs/assets/resume.zh-CN.png)
 
-## 功能
+## 直接下载（推荐）
 
-- 标准 A4 PDF
-- 中文与英文模板
-- 本地固定版本的 Marp CLI
-- 命令行与 macOS 双击导出
-- “用途 + 时间戳”文件命名
-- 支持单页和手动分页
-- 默认不跟踪个人简历和生成文件
+从 [Releases](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases/latest) 下载与你的系统对应的文件：
 
-## 环境要求
+| 系统 | 下载文件 | 启动方式 |
+| --- | --- | --- |
+| Windows x64 | `windows-x64.zip` | 双击 `Launch Resume Toolkit.cmd` |
+| macOS Apple Silicon | `macos-arm64.zip` | 双击 `Launch Resume Toolkit.command` |
+| macOS Intel | `macos-x64.zip` | 双击 `Launch Resume Toolkit.command` |
+| Linux x64 | `linux-x64.tar.gz` | 运行 `launch-resume.sh` |
 
-- Node.js 18 或更高版本
-- npm
-- Chrome 或 Chromium
+发行包已内置 Node.js 和固定版本的 Marp CLI，不需要安装 Node.js、npm 或 VS Code。PDF 导出需要以下任一系统浏览器：
 
-VS Code 和 Marp for VS Code 插件仅用于可选预览。
+- Windows：Microsoft Edge、Google Chrome 或 Firefox
+- macOS：Google Chrome、Microsoft Edge 或 Firefox（不支持 Safari）
+- Linux：Chrome、Chromium、Microsoft Edge 或 Firefox
 
-## 安装
-
-```bash
-git clone https://github.com/chaoyian/marp-a4-resume-toolkit.git
-cd marp-a4-resume-toolkit
-npm install
-```
-
-## 创建简历
-
-中文：
-
-```bash
-npm run init:zh
-```
-
-英文：
-
-```bash
-npm run init:en
-```
-
-命令会从公开模板创建本地 `resume.md`，不会覆盖已存在的文件。编辑并保存 `resume.md` 后执行：
-
-```bash
-npm run build
-```
-
-生成结果位于：
+首次启动时选择中文或英文模板。工具会在 `resumes/` 中创建本地简历；编辑并保存后再次启动，用 `↑ / ↓` 选择版本并按 `Enter` 导出。
 
 ```text
-output/pdf/resume.pdf
+resumes/
+├── 投研通用版.md
+├── 国企基金版.md
+└── resume-en.md
+
+output/pdf/
+└── 国企基金版_2026-09-01_10-30-00.pdf
 ```
 
-## 交互式导出
+同一秒重复导出会自动追加序号，不会覆盖旧 PDF。导出成功后会尝试使用系统默认 PDF 阅读器打开。
+
+> 便携版升级前请备份 `resumes/` 与 `output/`。首版使用压缩包分发，没有 Windows 代码签名或 macOS 公证，系统可能显示安全提示。
+
+## 从源码使用
+
+开发者或需要修改脚本的用户可以克隆仓库：
 
 ```bash
+git clone https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI.git
+cd marp-a4-resume-toolkit
+npm install
+npm run init:zh
 npm run export
 ```
 
-输入用途后会生成类似：
-
-```text
-output/pdf/investment-internship_2026-07-23_19-30-00.pdf
-```
-
-macOS 也可以双击：
-
-```text
-scripts/export-resume.command
-```
-
-## 示例与预览
+源码模式要求 Node.js 18+、npm 和兼容浏览器。常用命令：
 
 ```bash
-npm run build:zh        # 中文示例 PDF
-npm run build:en        # 英文示例 PDF
-npm run build:examples  # 两个示例
-npm run preview         # 预览本地 resume.md
-npm run preview:zh      # 预览中文示例
-npm run preview:en      # 预览英文示例
-```
-
-## 检查项目
-
-```bash
+npm run init:zh
+npm run init:en
+npm run export
+npm run export -- "resumes/国企基金版.md"
+npm run preview -- "resumes/国企基金版.md"
+npm run doctor
 npm run check
 ```
 
-该命令检查项目结构、A4 主题、示例配置和本地文件边界，并生成两份示例 PDF。
+如果浏览器安装在非标准位置，可以设置 `BROWSER_PATH` 为浏览器可执行文件的绝对路径。
 
-## 文档
+## 主题与分页
 
-- [架构与依赖](docs/ARCHITECTURE.md)
-- [隐私设计](docs/PRIVACY.md)
+默认主题为 `a4-resume`。宋体风格主题使用：
 
-项目结构、脚本和文档经过 AI 辅助重构，并由人工复核。
+```yaml
+theme: a4-resume-serif
+```
+
+Marp 将每张幻灯片作为一个 PDF 页面，不会自动将溢出内容流到下一页。使用单独一行 `---` 手动分页，并在修改文字、字体或间距后检查生成 PDF。
+
+## 项目结构
+
+```text
+src/          核心选择、初始化、导出与环境检测
+launchers/    Windows、macOS、Linux 启动入口
+scripts/      项目校验和发行打包
+themes/       A4 无衬线与衬线主题
+examples/     中英文公开模板
+tests/        单元测试
+docs/         架构、隐私与发行说明
+```
+
+更多信息见[架构与依赖](docs/ARCHITECTURE.md)和[隐私设计](docs/PRIVACY.md)。
 
 ## License
 

@@ -1,6 +1,7 @@
 {
   "markdown.marp.themes": [
-    "themes/a4-resume.css"
+    "themes/a4-resume.css",
+    "themes/a4-resume-serif.css"
   ],
   "markdown.marp.enableHtml": true
 }

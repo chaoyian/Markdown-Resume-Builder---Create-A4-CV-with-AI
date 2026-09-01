@@ -5,61 +5,62 @@ import { fileURLToPath } from 'node:url'
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const requiredFiles = [
+  'src/resume-library.mjs',
+  'src/runtime.mjs',
+  'src/export-interactive.mjs',
+  'src/export-pdf.mjs',
+  'src/doctor.mjs',
+  'launchers/launch-resume.cmd',
+  'launchers/launch-resume.command',
+  'launchers/launch-resume.sh',
   'themes/a4-resume.css',
-  'examples/resume.zh-CN.md',
-  'examples/resume.en.md',
+  'themes/a4-resume-serif.css',
+  'tests/resume-library.test.mjs',
+  'tests/runtime.test.mjs',
+  '.github/workflows/ci.yml',
+  '.github/workflows/release.yml',
   'README.md',
   'README.en.md',
   'LICENSE',
 ]
 
 for (const path of requiredFiles) {
-  if (!existsSync(resolve(projectRoot, path))) {
-    throw new Error(`Required file is missing: ${path}`)
+  if (!existsSync(resolve(projectRoot, path))) throw new Error(`Required file is missing: ${path}`)
+}
+
+const packageJson = JSON.parse(readFileSync(resolve(projectRoot, 'package.json'), 'utf8'))
+if (packageJson.version !== '2.0.0') throw new Error('package.json must declare version 2.0.0.')
+
+for (const [themePath, themeName] of [
+  ['themes/a4-resume.css', 'a4-resume'],
+  ['themes/a4-resume-serif.css', 'a4-resume-serif'],
+]) {
+  const theme = readFileSync(resolve(projectRoot, themePath), 'utf8')
+  if (!theme.includes(`@theme ${themeName}`) || !theme.includes('@size A4 210mm 297mm')) {
+    throw new Error(`${themePath} is missing required Marp metadata.`)
   }
 }
 
-const theme = readFileSync(
-  resolve(projectRoot, 'themes/a4-resume.css'),
-  'utf8',
-)
-
-if (!theme.includes('@theme a4-resume')) {
-  throw new Error('Theme metadata is missing @theme a4-resume.')
-}
-
-if (!theme.includes('@size A4 210mm 297mm')) {
-  throw new Error('Theme metadata is missing the A4 size preset.')
-}
-
-for (const example of [
-  'examples/resume.zh-CN.md',
-  'examples/resume.en.md',
-]) {
+for (const example of ['examples/resume.zh-CN.md', 'examples/resume.en.md']) {
   const source = readFileSync(resolve(projectRoot, example), 'utf8')
   if (!source.includes('theme: a4-resume') || !source.includes('size: A4')) {
     throw new Error(`${example} does not select the A4 resume theme.`)
   }
 }
 
-const trackedPrivateResume = spawnSync(
-  'git',
-  ['ls-files', '--error-unmatch', 'resume.md'],
-  { cwd: projectRoot, stdio: 'ignore' },
-)
-
-if (trackedPrivateResume.status === 0) {
-  throw new Error('resume.md must remain untracked.')
+const trackedPrivateResume = spawnSync('git', ['ls-files', 'resumes'], {
+  cwd: projectRoot,
+  encoding: 'utf8',
+})
+if (trackedPrivateResume.status !== 0 || trackedPrivateResume.stdout.trim()) {
+  throw new Error('resumes/ must remain untracked.')
 }
 
-const ignoredPrivateResume = spawnSync(
+const ignoredResumeLibrary = spawnSync(
   'git',
-  ['check-ignore', '--quiet', 'resume.md'],
+  ['check-ignore', '--quiet', 'resumes/.privacy-check'],
   { cwd: projectRoot, stdio: 'ignore' },
 )
+if (ignoredResumeLibrary.status !== 0) throw new Error('resumes/ must be covered by .gitignore.')
 
-if (ignoredPrivateResume.status !== 0) {
-  throw new Error('resume.md must be covered by .gitignore.')
-}
-
-console.log('Project structure and privacy boundary are valid.')
+console.log('Project structure, release metadata, and privacy boundary are valid.')

@@ -1,12 +1,15 @@
 node_modules/
 .npm-cache/
 tmp/
+dist/
+runtime/
 .DS_Store
 .npmrc
 生成简历.command
 
 # Private working files
 resume.md
+resumes/
 *.private.md
 private/
 archive/

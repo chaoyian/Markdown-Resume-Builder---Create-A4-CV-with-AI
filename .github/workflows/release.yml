@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Package ${{ matrix.platform }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            arch: x64
+            os: windows-2025
+            extension: zip
+          - platform: macos
+            arch: arm64
+            os: macos-15
+            extension: zip
+          - platform: macos
+            arch: x64
+            os: macos-15-intel
+            extension: zip
+          - platform: linux
+            arch: x64
+            os: ubuntu-24.04
+            extension: tar.gz
+
+    env:
+      PACKAGE_NAME: marp-a4-resume-toolkit-v2.0.0-${{ matrix.platform }}-${{ matrix.arch }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Verify release version
+        shell: bash
+        run: |
+          test "$(node -p "require('./package.json').version")" = "2.0.0"
+          if [[ "${GITHUB_REF_TYPE:-branch}" == "tag" ]]; then
+            test "$GITHUB_REF_NAME" = "v2.0.0"
+          fi
+
+      - name: Install and test
+        run: npm ci && npm test && npm run check:structure
+
+      - name: Stage portable package
+        run: node scripts/package-release.mjs --platform=${{ matrix.platform }} --arch=${{ matrix.arch }}
+
+      - name: Archive Windows package
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: Compress-Archive -Path "dist/stage/$env:PACKAGE_NAME" -DestinationPath "dist/$env:PACKAGE_NAME.zip"
+
+      - name: Archive macOS package
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: cd dist/stage && zip -qry "../$PACKAGE_NAME.zip" "$PACKAGE_NAME"
+
+      - name: Archive Linux package
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: tar -C dist/stage -czf "dist/$PACKAGE_NAME.tar.gz" "$PACKAGE_NAME"
+
+      - name: Smoke-test embedded runtime
+        shell: bash
+        run: |
+          if [[ "${{ matrix.platform }}" == "windows" ]]; then
+            "dist/stage/$PACKAGE_NAME/runtime/node.exe" --version
+          else
+            "dist/stage/$PACKAGE_NAME/runtime/node" --version
+          fi
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist/${{ env.PACKAGE_NAME }}.${{ matrix.extension }}
+          if-no-files-found: error
+
+  publish:
+    if: github.ref_type == 'tag'
+    needs: package
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: cd dist && sha256sum * > SHA256SUMS.txt
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          dist/*
+          --verify-tag
+          --title "Marp A4 Resume Toolkit v2.0.0"
+          --notes-file docs/releases/v2.0.0.md

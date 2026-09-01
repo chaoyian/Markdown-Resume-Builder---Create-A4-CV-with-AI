@@ -1,72 +1,48 @@
 # Architecture and dependencies
 
-## Build pipeline
+## Runtime paths
+
+Both source and portable modes execute the same `src/` modules:
 
 ```text
-Markdown source
-    |
-    +-- themes/a4-resume.css
-    |
-    +-- @marp-team/marp-cli
-            |
-            +-- Chrome / Chromium
-                    |
-                    +-- output/pdf/*.pdf
+resumes/*.md
+    -> interactive picker or explicit path
+    -> themes/a4-resume*.css
+    -> pinned Marp CLI
+    -> detected Chrome / Edge / Chromium / Firefox
+    -> output/pdf/<version>_<timestamp>.pdf
 ```
 
-Marp CLI reads the Markdown source, loads the custom theme from `package.json`, and uses a browser to print the rendered document to PDF.
+Source mode uses the user's Node.js installation. A portable archive uses `runtime/node` or `runtime/node.exe` supplied in that archive. Both resolve Marp directly through `node_modules/@marp-team/marp-cli/marp-cli.js`, avoiding shell and `.cmd` differences between operating systems.
 
-## Runtime dependencies
+## User data boundary
 
-| Dependency | Version | Responsibility |
-| --- | --- | --- |
-| Node.js | 18+ | Runs project scripts and Marp CLI |
-| npm | Bundled with Node.js | Installs dependencies from the lockfile |
-| `@marp-team/marp-cli` | Pinned in `package-lock.json` | Markdown, HTML, CSS, and PDF conversion |
-| Chrome / Chromium | Current supported version | Headless PDF printing |
-| System fonts | Platform dependent | Text rendering |
+`resumes/` is the private, top-level Markdown library. The picker ignores hidden files, nested directories, and non-Markdown files. Output filenames are normalized for Windows, macOS, and Linux, and same-second collisions receive a numeric suffix.
 
-Marp is installed locally through `npm install`. A global Marp installation is not required.
+The toolkit never automatically copies, renames, deletes, uploads, or commits a personal resume. `output/pdf/` contains generated files and is also ignored by Git.
 
-## A4 theme
+## Browser resolution
 
-`themes/a4-resume.css` declares a named Marp theme and an A4 size preset:
+The exporter first honors `BROWSER_PATH`, then searches standard locations in a stable order: Chrome/Chromium, Edge, and Firefox. Marp receives both the browser kind and absolute executable path. Firefox remains a fallback because PDF rendering may differ from Chromium-based browsers.
 
-```css
-/**
- * @theme a4-resume
- * @size A4 210mm 297mm
- */
-```
+The lightweight v2.0 archives intentionally do not bundle a browser. Windows normally provides Edge; macOS and Linux users need a compatible browser installed separately.
 
-Each resume selects the theme through front matter:
+## Portable package composition
 
-```yaml
-marp: true
-theme: a4-resume
-size: A4
-```
+Release jobs run natively on each target architecture and stage only an explicit allowlist:
 
-## Pagination
+- application modules, themes, examples, and documentation;
+- the matching Node.js runtime and license;
+- dependencies installed from `package-lock.json`;
+- exactly one platform launcher;
+- an empty starter resume directory and package manifest.
 
-Marp treats every slide as one PDF page. It does not automatically flow overflowing content onto the next page.
+`.git`, private resumes, generated PDFs, caches, archives, and development output are excluded. GitHub Actions produces two macOS archives plus Windows x64 and Linux x64 archives, then publishes SHA-256 checksums.
 
-A standalone separator creates a new page:
+## Project roles
 
-```markdown
----
-```
-
-Page breaks should be placed between complete sections or entries. Always inspect the generated PDF after changing text length, fonts, or spacing.
-
-## Project scripts
-
-- `scripts/init-resume.mjs` creates a private working copy.
-- `scripts/export-pdf.mjs` validates paths and invokes the local Marp binary.
-- `scripts/export-interactive.mjs` creates timestamped exports.
-- `scripts/verify-project.mjs` validates required files, theme metadata, example configuration, and the private-file boundary.
-- `scripts/export-resume.command` provides a macOS double-click wrapper.
-
-## VS Code
-
-`.vscode/settings.json` registers the same theme for Marp for VS Code. It is optional and has no role in command-line PDF generation.
+- `src/` contains shipped application code.
+- `launchers/` contains thin platform entry points.
+- `scripts/` contains development and release automation.
+- `tests/` covers deterministic library and runtime behavior.
+- `.github/workflows/` validates all four targets and publishes tagged releases.

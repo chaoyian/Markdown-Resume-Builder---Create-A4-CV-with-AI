@@ -1,0 +1,54 @@
+/**
+ * @theme a4-resume-serif
+ * @size A4 210mm 297mm
+ */
+
+@import "a4-resume";
+
+@font-face {
+  font-family: "Resume Sans Numerals";
+  src: local("Helvetica Neue"), local("Arial");
+  font-style: normal;
+  font-weight: 100 900;
+  unicode-range: U+0025, U+002B-003A, U+00A5, U+FF05, U+FFE5;
+}
+
+section {
+  font-family: "Resume Sans Numerals", Georgia, "Source Serif 4", "Songti SC",
+    STSong, "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC",
+    SimSun, "Times New Roman", serif;
+  font-size: 11.2pt;
+  line-height: 1.38;
+}
+
+h1,
+h2,
+.entry-left,
+strong {
+  font-family: "Resume Sans Numerals", Baskerville, Georgia, "Songti SC",
+    STSong, "Noto Serif CJK SC", "Source Han Serif SC", "Times New Roman", serif;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: 6px;
+}
+
+h2 {
+  letter-spacing: 2px;
+}
+
+.contact-info,
+.entry-right {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+li {
+  font-size: 10.9pt;
+  line-height: 1.36;
+}
+
+p {
+  font-size: 10.9pt;
+  line-height: 1.38;
+}
