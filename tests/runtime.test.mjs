@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { resolve } from 'node:path'
 import test from 'node:test'
 import { browserCandidates, classifyBrowser, findBrowser } from '../src/runtime.mjs'
 
@@ -9,15 +10,16 @@ test('classifies supported browser executables', () => {
 })
 
 test('honors an existing BROWSER_PATH before automatic discovery', () => {
+  const customBrowser = resolve('/custom/chromium')
   const browser = findBrowser({
     platform: 'linux',
     env: { BROWSER_PATH: '/custom/chromium' },
-    pathExists: (path) => path === '/custom/chromium',
+    pathExists: (path) => path === customBrowser,
     pathLookup: () => null,
   })
   assert.deepEqual(browser, {
     kind: 'chrome',
-    path: '/custom/chromium',
+    path: customBrowser,
     source: 'BROWSER_PATH',
   })
 })
