@@ -1,8 +1,8 @@
 # Marp A4 Resume Toolkit
 
-[![CI](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml)
+[![CI](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/chaoyian/marp-a4-resume-toolkit)](https://github.com/chaoyian/marp-a4-resume-toolkit/releases)
+[![Release](https://img.shields.io/github/v/release/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases)
 
 English | [简体中文](README.md)
 
@@ -12,7 +12,7 @@ A bilingual resume toolkit that keeps content in Markdown and generates standard
 
 ## Download (recommended)
 
-Download the asset for your system from [Releases](https://github.com/chaoyian/marp-a4-resume-toolkit/releases/latest):
+Download the asset for your system from [Releases](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases/latest):
 
 | System | Asset | Launch |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ Exports use version-and-timestamp filenames and never overwrite an existing PDF.
 ## Use from source
 
 ```bash
-git clone https://github.com/chaoyian/marp-a4-resume-toolkit.git
+git clone https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI.git
 cd marp-a4-resume-toolkit
 npm install
 npm run init:en

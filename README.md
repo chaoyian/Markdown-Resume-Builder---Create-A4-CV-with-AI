@@ -1,8 +1,8 @@
 # Marp A4 Resume Toolkit
 
-[![CI](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/marp-a4-resume-toolkit/actions/workflows/ci.yml)
+[![CI](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/chaoyian/marp-a4-resume-toolkit)](https://github.com/chaoyian/marp-a4-resume-toolkit/releases)
+[![Release](https://img.shields.io/github/v/release/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI)](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases)
 
 [English](README.en.md) | 简体中文
 
@@ -12,7 +12,7 @@
 
 ## 直接下载（推荐）
 
-从 [Releases](https://github.com/chaoyian/marp-a4-resume-toolkit/releases/latest) 下载与你的系统对应的文件：
+从 [Releases](https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI/releases/latest) 下载与你的系统对应的文件：
 
 | 系统 | 下载文件 | 启动方式 |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ output/pdf/
 开发者或需要修改脚本的用户可以克隆仓库：
 
 ```bash
-git clone https://github.com/chaoyian/marp-a4-resume-toolkit.git
+git clone https://github.com/chaoyian/Markdown-Resume-Builder---Create-A4-CV-with-AI.git
 cd marp-a4-resume-toolkit
 npm install
 npm run init:zh
